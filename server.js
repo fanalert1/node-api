@@ -61,7 +61,7 @@ router.get('/movies',function(req, res) {
         
     });
     
-router.get('/movies/:movie_id',function(req, res) {
+router.get('/movies/id/:movie_id',function(req, res) {
         
        Movie.find({id:req.params.movie_id},function(err, movie) {
             if (err)
