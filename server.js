@@ -9,6 +9,7 @@ var app        = express();
 var ParseServer = require('parse-server').ParseServer;// define our app using express
 var bodyParser = require('body-parser');
 var moment = require('moment-timezone');
+var request = require("request");
 
 var mongoose   = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/firedb'); 
@@ -37,15 +38,69 @@ router.get('/', function(req, res) {
 // more routes for our API will happen here
 
 router.get('/events',function(req, res) {
-        
-       Event.find({},function(err, events) {
+    
+    
+      function findMovie(doc,cb){
+         Movie.find({name:doc.movie_name},function(err, movie) {
             if (err)
                 res.send(err);
-            //sort movies by release_ts
+             doc.details=[];
+            //res.json(movie);
+             doc.details = movie;
+             console.log(doc);  
             
+            cb(doc);
+        });
+      }
+    
+       
         
-            
-            res.json(events);
+        
+       Event.find({},function(err, events) {
+             if (err)
+                res.send(err);
+            //sort movies by release_ts
+             var arrevents = [];
+             var completed = 0;
+             var complete = function() {
+             completed++;
+             if (completed === events.length) {
+                res.send(arrevents);
+             }
+             }
+                
+                 for (var i in events) {
+                         //events[i]["event_desc"]="test";
+                         var val = events[i];
+                         //console.log(new Date(2012,11,10) < new Date(2012, 11, 9))
+                         //val.event_type="test";
+                         if (val.event_type === "FU")
+                         {
+                         val.event_type=val.movie_name+" is releasing soon. Expected Release Date:";
+                         }
+                         if (val.event_type === "FR")
+                         {
+                         val.event_type=val.movie_name+" is open for booking";
+                         }
+                         if (val.event_type === "UR")
+                         {
+                         val.event_type=val.movie_name+" is open for booking";
+                         }
+                         if (val.event_type === "RC")
+                         {
+                         val.event_type=val.movie_name+" is closed for booking";
+                         }
+                         console.log(val);
+                         
+                       //  if (val.ticket_type == "inc") 
+                       
+                        findMovie(val,function cb(doc){
+                            arrevents.push(doc);
+                            complete();
+                        });
+                                   
+                 }
+            //res.send(arrevents);
         });
         
 });
