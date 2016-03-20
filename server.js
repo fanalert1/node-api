@@ -98,7 +98,6 @@ router.get('/events',function(req, res) {
                             arrevents.push(doc);
                             complete();
                         });
-                                   
                  }
             //res.send(arrevents);
         });
@@ -135,6 +134,7 @@ router.get('/movies',function(req, res) {
         
     });
     
+    
 router.get('/movies/id/:movie_id',function(req, res) {
         
        Movie.find({id:req.params.movie_id},function(err, movie) {
@@ -146,7 +146,8 @@ router.get('/movies/id/:movie_id',function(req, res) {
         
     });
     
-router.get('/movies/name/:movie_name',function(req, res) {
+    
+router.get('/movies/name/:movie_name/:lang',function(req, res) {
         
        Movie.find({name:req.params.movie_name},function(err, movie) {
             if (err)
