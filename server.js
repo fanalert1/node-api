@@ -45,7 +45,7 @@ router.get('/events',function(req, res) {
             if (err)
                 res.send(err);
              doc.details=[];
-            //res.json(movie);
+            
              doc.details = movie;
              console.log(doc);  
             
@@ -65,7 +65,7 @@ router.get('/events',function(req, res) {
              var complete = function() {
              completed++;
              if (completed === events.length) {
-                res.send(arrevents);
+                res.json(arrevents);
              }
              }
                 
@@ -76,19 +76,19 @@ router.get('/events',function(req, res) {
                          //val.event_type="test";
                          if (val.event_type === "FU")
                          {
-                         val.event_type=val.movie_name+" is releasing soon. Expected Release Date:";
+                         val.event_type=val.movie_name+" is coming soon. Releasing on";
                          }
                          if (val.event_type === "FR")
                          {
-                         val.event_type=val.movie_name+" is open for booking";
+                         val.event_type=val.movie_name+" is open for booking. Releasing on";
                          }
                          if (val.event_type === "UR")
                          {
-                         val.event_type=val.movie_name+" is open for booking";
+                         val.event_type=val.movie_name+" is open for booking. Releasing on";
                          }
                          if (val.event_type === "RC")
                          {
-                         val.event_type=val.movie_name+" is closed for booking";
+                         val.event_type=val.movie_name+" is closed for booking.";
                          }
                          console.log(val);
                          
