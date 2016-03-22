@@ -17,7 +17,7 @@ mongoose.connect('mongodb://localhost:27017/firedb');
 var Movie     = require('./models/movie');
 var Token     = require('./models/token');
 var Event     = require('./models/event');
-// 
+
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -40,23 +40,26 @@ router.get('/', function(req, res) {
 router.get('/events',function(req, res) {
     
     
-      function findMovie(doc,cb){
-         Movie.find({name:doc.movie_name},function(err, movie) {
-            if (err)
-                res.send(err);
-             doc.details=[];
-            
-             doc.details = movie;
-             console.log(doc);  
-            
-            cb(doc);
-        });
-      }
+          function findMovie(doc,cb){
+             Movie.find({name:doc.movie_name},function(err, movie) {
+                if (err)
+                    res.send(err);
+                 doc.details=[];
+                
+                 doc.details = movie;
+                 //console.log(doc);  
+                
+                cb(doc);
+            });
+          }
     
-       
-        
-        
-       Event.find({},function(err, events) {
+        var date_sort_desc = function (date1, date2) { 
+                   if (date1.insert_ts > date2.insert_ts) return -1; 
+                   if (date1.insert_ts < date2.insert_ts) return 1; 
+                   return 0; 
+                };
+      
+        Event.find({},function(err, events) {
              if (err)
                 res.send(err);
             //sort movies by release_ts
@@ -65,6 +68,7 @@ router.get('/events',function(req, res) {
              var complete = function() {
              completed++;
              if (completed === events.length) {
+                arrevents.sort(date_sort_desc);
                 res.json(arrevents);
              }
              }
@@ -90,7 +94,9 @@ router.get('/events',function(req, res) {
                          {
                          val.event_type=val.movie_name+" is closed for booking.";
                          }
-                         console.log(val);
+                        // insert_ts = val.insert_ts;
+                        // val.insert_ts1 = moment(new Date(insert_ts)).tz('Asia/Kolkata').format();
+                        // console.log(val.insert_ts);
                          
                        //  if (val.ticket_type == "inc") 
                        
@@ -162,14 +168,8 @@ router.get('/movies/name/:movie_name/:lang',function(req, res) {
 router.get('/movies/running',function(req, res) {
         
       
-      var current_ts = moment().tz('Asia/Kolkata').format('YYYY/MM/DD HH:mm:ss');
-  //  var ts = new Date();
-   // var today = moment().startOf('day')
-//    var tomorrow = moment(today).add(1, 'days')
-
-//dey venna it is getting stored as string in db from php. it should be iso date format
-//Model.find({"date": {'$gte': new Date('3/1/2014'), '$lt': new Date('3/16/2014')}}, callback);
-     //  console.log(ts);
+       var current_ts = moment().tz('Asia/Kolkata').format('YYYY/MM/DD');
+  
        Movie.find({"type":"running"},function(err, movies) {
             if (err)
                 res.send(err);
@@ -179,19 +179,17 @@ router.get('/movies/running',function(req, res) {
                  for (var i in movies) {
                          var val = movies[i];
                          //console.log(new Date(2012,11,10) < new Date(2012, 11, 9))
+                         console.log(val.name);
+                         console.log(new Date(current_ts));
+                         console.log(new Date(val.release_ts))
                          if (new Date(val.release_ts) <= new Date(current_ts))
                          {
                          arrmovies.push(val);
                          }
                        //  if (val.ticket_type == "inc") 
                  }
-                //end of change
-            //console.log(arrmovies);
-             //sort movies by release_ts
-             
+               
                  var date_sort_desc = function (date1, date2) { 
-                   // This is a comparison function that will result in dates being sorted in 
-                   // DESCENDING order. 
                    if (date1.release_ts > date2.release_ts) return -1; 
                    if (date1.release_ts < date2.release_ts) return 1; 
                    return 0; 
@@ -214,7 +212,7 @@ router.get('/movies/upcoming',function(req, res) {
             //sort movies by release_ts
             
             movies.sort(function(a,b) { 
-                return new Date(a.release_ts).getTime() - new Date(b.release_ts).getTime() 
+                return a.release_ts - b.release_ts 
             });
             
             res.json(movies);
@@ -226,14 +224,13 @@ router.get('/movies/upcoming',function(req, res) {
     
 router.get('/movies/upcoming_open',function(req, res) {
     
-    var current_ts = moment().tz('Asia/Kolkata').format('YYYY/MM/DD HH:mm:ss');
+    var current_ts = moment().tz('Asia/Kolkata').format('YYYY/MM/DD');
   //  var ts = new Date();
    // var today = moment().startOf('day')
 //    var tomorrow = moment(today).add(1, 'days')
 
 //dey venna it is getting stored as string in db from php. it should be iso date format
-//Model.find({"date": {'$gte': new Date('3/1/2014'), '$lt': new Date('3/16/2014')}}, callback);
-     //  console.log(ts);
+
        Movie.find({"type":"running"},function(err, movies) {
             if (err)
                 res.send(err);
@@ -247,16 +244,15 @@ router.get('/movies/upcoming_open',function(req, res) {
                          {
                          arrmovies.push(val);
                          }
-                       //  if (val.ticket_type == "inc") 
+                      
                  }
-                //end of change
-            //console.log(arrmovies);
+               
              arrmovies.sort(function(a,b) { 
-                    return new Date(a.release_ts).getTime() - new Date(b.release_ts).getTime() 
+                   // return new Date(a.release_ts).getTime() - new Date(b.release_ts).getTime() 
+                   return a.release_ts - b.release_ts
                 });
            
              res.send(arrmovies) ;
-                //change for filtering dates
                
             //res.json(movies);
         });
