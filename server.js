@@ -1,5 +1,5 @@
 // server.js
-
+//chumma
 // BASE SETUP
 // =============================================================================
 
@@ -96,7 +96,7 @@ router.get('/events',function(req, res) {
                          }
                         // insert_ts = val.insert_ts;
                         // val.insert_ts1 = moment(new Date(insert_ts)).tz('Asia/Kolkata').format();
-                        // console.log(val.insert_ts);
+                         console.log(val.movie_name+val.insert_ts);
                          
                        //  if (val.ticket_type == "inc") 
                        
@@ -143,7 +143,7 @@ router.get('/movies',function(req, res) {
     
 router.get('/movies/id/:movie_id',function(req, res) {
         
-       Movie.find({id:req.params.movie_id},function(err, movie) {
+       Movie.find({'_id':req.params.movie_id},function(err, movie) {
             if (err)
                 res.send(err);
 
