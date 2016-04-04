@@ -86,6 +86,10 @@ router.get('/events',function(req, res) {
                          {
                          val.event_type=val.movie_name+" is open for booking. Releasing on";
                          }
+                         if (val.event_type === "RR")
+                         {
+                         val.event_type=val.movie_name+" is open for booking. Releasing on";
+                         }
                          if (val.event_type === "UR")
                          {
                          val.event_type=val.movie_name+" is open for booking. Releasing on";
@@ -298,7 +302,24 @@ var api = new ParseServer({
   appId: '12345',
   masterKey: '12345', //Add your master key here. Keep it secret!
   fileKey: 'optionalFileKey',
-  serverURL: 'http://128.199.141.102/parse' // Don't forget to change to https if needed
+  serverURL: 'http://128.199.141.102/parse', // Don't forget to change to https if needed
+  verifyUserEmails: true,
+  // This will appear in the link that is used to verify email addresses and reset passwords.
+  publicServerURL: 'http://128.199.141.102:8080/parse',
+  // Your apps name. This will appear in the subject and body of the emails that are sent.
+  appName: 'Fan Alert',
+  // The email adapter
+  emailAdapter: {
+    module: 'parse-server-simple-mailgun-adapter',
+    options: {
+      // The address that your emails come from
+      fromAddress: 'fanalert1@gmail.com',
+      // Your domain from mailgun.com
+      domain: 'geocircle.in',
+      // Your API key from mailgun.com
+      apiKey: 'key-2ed38e280a30c224064f626acc2aea40',
+    }
+  }
 });
 
 // Serve the Parse API on the /parse URL prefix
