@@ -41,7 +41,8 @@ router.get('/events',function(req, res) {
     
     
           function findMovie(doc,cb){
-             Movie.find({name:doc.movie_name},function(err, movie) {
+             console.log(doc.movie_id);  
+             Movie.find({'_id':doc.movie_id},function(err, movie) {
                 if (err)
                     res.send(err);
                  doc.details=[];
@@ -80,23 +81,23 @@ router.get('/events',function(req, res) {
                          //val.event_type="test";
                          if (val.event_type === "FU")
                          {
-                         val.event_type=val.movie_name+" is coming soon. Releasing on";
+                         val.event_type=val.movie_name+" ("+val.lang+") is coming soon. Release Date";
                          }
                          if (val.event_type === "FR")
                          {
-                         val.event_type=val.movie_name+" is open for booking. Releasing on";
+                         val.event_type=val.movie_name+" ("+val.lang+") is open for booking on "+val.opened_at+". Release Date:";
                          }
                          if (val.event_type === "RR")
                          {
-                         val.event_type=val.movie_name+" is open for booking. Releasing on";
+                         val.event_type=val.movie_name+" ("+val.lang+") is open for booking on "+val.opened_at+". Release Date:";
                          }
                          if (val.event_type === "UR")
                          {
-                         val.event_type=val.movie_name+" is open for booking. Releasing on";
+                         val.event_type=val.movie_name+" ("+val.lang+") is open for booking on "+val.opened_at+". Release Date:";
                          }
                          if (val.event_type === "RC")
                          {
-                         val.event_type=val.movie_name+" is closed for booking.";
+                         val.event_type=val.movie_name+" ("+val.lang+") is closed for booking.";
                          }
                         // insert_ts = val.insert_ts;
                         // val.insert_ts1 = moment(new Date(insert_ts)).tz('Asia/Kolkata').format();
@@ -210,7 +211,7 @@ router.get('/movies/running',function(req, res) {
     
 router.get('/movies/upcoming',function(req, res) {
         
-       Movie.find({"type":"upcoming"},function(err, movies) {
+       Movie.find({"type":"upcoming","disabled" : "false"},function(err, movies) {
             if (err)
                 res.send(err);
             //sort movies by release_ts
@@ -313,7 +314,7 @@ var api = new ParseServer({
     module: 'parse-server-simple-mailgun-adapter',
     options: {
       // The address that your emails come from
-      fromAddress: 'fanalert1@gmail.com',
+      fromAddress: 'Fan Alert <fanalert1@gmail.com>',
       // Your domain from mailgun.com
       domain: 'geocircle.in',
       // Your API key from mailgun.com
