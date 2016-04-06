@@ -60,7 +60,7 @@ router.get('/events',function(req, res) {
                    return 0; 
                 };
       
-        Event.find({},function(err, events) {
+        Event.find({}).sort({ event_id: -1 }).limit(20).exec(function(err, events) {
              if (err)
                 res.send(err);
             //sort movies by release_ts
@@ -79,21 +79,26 @@ router.get('/events',function(req, res) {
                          var val = events[i];
                          //console.log(new Date(2012,11,10) < new Date(2012, 11, 9))
                          //val.event_type="test";
+                         if(val.opened_at === "bms")
+                         var site="Book My Show";
+                         if(val.opened_at === "tktnew")
+                         var site="Ticket New";
+                         
                          if (val.event_type === "FU")
                          {
                          val.event_type=val.movie_name+" ("+val.lang+") is coming soon. Release Date";
                          }
                          if (val.event_type === "FR")
                          {
-                         val.event_type=val.movie_name+" ("+val.lang+") is open for booking on "+val.opened_at+". Release Date:";
+                         val.event_type=val.movie_name+" ("+val.lang+") is open for booking on "+site+". Release Date:";
                          }
                          if (val.event_type === "RR")
                          {
-                         val.event_type=val.movie_name+" ("+val.lang+") is open for booking on "+val.opened_at+". Release Date:";
+                         val.event_type=val.movie_name+" ("+val.lang+") is open for booking on "+site+". Release Date:";
                          }
                          if (val.event_type === "UR")
                          {
-                         val.event_type=val.movie_name+" ("+val.lang+") is open for booking on "+val.opened_at+". Release Date:";
+                         val.event_type=val.movie_name+" ("+val.lang+") is open for booking on "+site+". Release Date:";
                          }
                          if (val.event_type === "RC")
                          {
