@@ -86,7 +86,7 @@ router.get('/events',function(req, res) {
                          
                          if (val.event_type === "FU")
                          {
-                         val.event_type=val.movie_name+" ("+val.lang+") is coming soon. Release Date";
+                         val.event_type="Get Ready. "+val.movie_name+" ("+val.lang+") is coming soon. Release Date:";
                          }
                          if (val.event_type === "FR")
                          {
@@ -102,7 +102,7 @@ router.get('/events',function(req, res) {
                          }
                          if (val.event_type === "RC")
                          {
-                         val.event_type=val.movie_name+" ("+val.lang+") is closed for booking.";
+                         val.event_type=val.movie_name+" is closed for booking.";
                          }
                         // insert_ts = val.insert_ts;
                         // val.insert_ts1 = moment(new Date(insert_ts)).tz('Asia/Kolkata').format();
@@ -303,7 +303,7 @@ app.use('/api', router);
 // Specify the connection string for your mongodb database
 // and the location to your Parse cloud code
 var api = new ParseServer({
-  databaseURI: 'mongodb://localhost:27017/dev',
+  databaseURI: 'mongodb://localhost:27017/prod',
   cloud: '/root/node_api/node_modules/parse-server/lib/cloud/main.js', // Provide an absolute path
   appId: '12345',
   masterKey: '12345', //Add your master key here. Keep it secret!
