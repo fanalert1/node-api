@@ -60,7 +60,7 @@ router.get('/events',function(req, res) {
                    return 0; 
                 };
       
-        Event.find({}).sort({ event_id: -1 }).limit(20).exec(function(err, events) {
+        Event.find({}).sort({ event_id: -1 }).limit(40).exec(function(err, events) {
              if (err)
                 res.send(err);
             //sort movies by release_ts
@@ -83,6 +83,11 @@ router.get('/events',function(req, res) {
                          var site="Book My Show";
                          if(val.opened_at === "tktnew")
                          var site="Ticket New";
+                         
+                         if (val.event_type === "TH")
+                         {
+                         val.event_type=val.movie_name+" ("+val.lang+") is open for booking in "+val.theatre+" ("+site+"). Release Date:";
+                         }
                          
                          if (val.event_type === "FU")
                          {
@@ -180,7 +185,7 @@ router.get('/movies/running',function(req, res) {
       
        var current_ts = moment().tz('Asia/Kolkata').format('YYYY/MM/DD');
   
-       Movie.find({"type":"running"},function(err, movies) {
+       Movie.find({"type":"running","disabled" : "false","poster_url":{$ne:null}},function(err, movies) {
             if (err)
                 res.send(err);
             
@@ -216,7 +221,7 @@ router.get('/movies/running',function(req, res) {
     
 router.get('/movies/upcoming',function(req, res) {
         
-       Movie.find({"type":"upcoming","disabled" : "false"},function(err, movies) {
+       Movie.find({"type":"upcoming","disabled" : "false","poster_url":{$ne:null}},function(err, movies) {
             if (err)
                 res.send(err);
             //sort movies by release_ts
@@ -241,7 +246,7 @@ router.get('/movies/upcoming_open',function(req, res) {
 
 //dey venna it is getting stored as string in db from php. it should be iso date format
 
-       Movie.find({"type":"running"},function(err, movies) {
+       Movie.find({"type":"running","disabled" : "false","poster_url":{$ne:null}},function(err, movies) {
             if (err)
                 res.send(err);
             
@@ -308,7 +313,7 @@ var api = new ParseServer({
   appId: '12345',
   masterKey: '12345', //Add your master key here. Keep it secret!
   fileKey: 'optionalFileKey',
-  serverURL: 'http://128.199.141.102/parse', // Don't forget to change to https if needed
+  serverURL: 'http://128.199.141.102:8080/parse', // Don't forget to change to https if needed
   verifyUserEmails: true,
   // This will appear in the link that is used to verify email addresses and reset passwords.
   publicServerURL: 'http://128.199.141.102:8080/parse',

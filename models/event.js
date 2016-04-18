@@ -5,6 +5,7 @@ var eventSchema   = new Schema({
     movie_name: String,
     movie_id: String,
     lang: String,
+    theatre: String,
     event_type: String,
     opened_at: String,
     insert_ts: Date,
